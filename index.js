@@ -3,6 +3,7 @@ const width = canvas.clientWidth
 const height = canvas.clientHeight
 
 let renderer
+let stats
 let camera
 let scene
 let light
@@ -15,6 +16,9 @@ function initThree() {
   renderer.setSize(width, height)
   canvas.appendChild(renderer.domElement)
   renderer.setClearColor(0xffffff, 1.0) // ?
+
+  stats = new Stats()
+  document.body.appendChild(stats.domElement)
 }
 
 function initCamera() {
@@ -42,41 +46,31 @@ function initLight() {
   scene.add(light)
 }
 
-// function initObject() {
-//   const geometry = new THREE.Geometry()
-//   const material = new THREE.LineBasicMaterial({ vertexColors: true })
-
-//   geometry.vertices.push(
-//     new THREE.Vector3(-100, 0, 100),
-//     new THREE.Vector3(100, 0, -100))
-//   geometry.colors.push(
-//     new THREE.Color(0x00FF00),
-//     new THREE.Color(0xFF0000))
-
-//   const line = new THREE.Line(geometry, material, THREE.LineSegments)
-//   scene.add(line)
-// }
 
 function initObject() {
   const geometry = new THREE.Geometry()
+  const material = new THREE.LineBasicMaterial({ vertexColors: true })
+
   geometry.vertices.push(
-    new THREE.Vector3( - 500, 0, 0 ),
-    new THREE.Vector3( 500, 0, 0 ))
+    new THREE.Vector3(-100, 0, 100),
+    new THREE.Vector3(100, 0, -100))
+  geometry.colors.push(
+    new THREE.Color(0x00FF00),
+    new THREE.Color(0xFF0000))
 
-  const material = new THREE.LineBasicMaterial({ color: 0x000000, opacity: 0.2 })
+  line = new THREE.Line(geometry, material, THREE.LineSegments)
+  scene.add(line)
 
-  for (let i = 0; i <= 20; i++) {
-    const line1 = new THREE.Line(geometry, material)
-    line1.position.z = (i * 50) - 500
-    scene.add(line1)
-
-    const line2 = new THREE.Line(geometry, material)
-    line2.position.x = (i * 50) - 500;
-    line2.rotation.y = 90 * Math.PI / 180;
-    scene.add(line2);
-  }
+  new TWEEN.Tween(line.rotation).to({y: Math.PI}, 1000).repeat(Infinity).start()
 }
 
+function animation() {
+  renderer.render(scene, camera)
+  requestAnimationFrame(animation)
+
+  stats.update()
+  TWEEN.update()
+}
 
 function threeStart() {
   initThree()
@@ -84,11 +78,7 @@ function threeStart() {
   initScene()
   initLight()
   initObject()
-  renderer.clear()
-  renderer.render(scene, camera)
+  animation()
 }
 
 document.onload = threeStart()
-
-
-

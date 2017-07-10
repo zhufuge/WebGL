@@ -35,7 +35,7 @@
 当物件变多时，整个系统会变得很乱，因此需要将其结构化，形成一个简单的框架。
 这样更利于开发和维护。
 
-* 第二章 点线面
+* 第二章 点线
 ** 点
    定义一个点很简单。
 
@@ -53,7 +53,7 @@
 ** 线段
    画一条线段有点复杂。
 
-   1. 首先要声明一个几何体 geometry
+   *1.首先要声明一个几何体 geometry*
    #+BEGIN_SRC js
      const geometry = new THREE.Geometry()
    #+END_SRC
@@ -63,30 +63,66 @@
 
    几何体里有一个 vertices 变量，是个数组，可以用来存放无数个点。
 
-   2. 定义线条的材质
+   *2.定义线条的材质*
    #+BEGIN_SRC js
      const material = new THREE.LineBasicMaterial(Object)
    #+END_SRC
 
    Object 为一个定义材质外观的普通对象， 如 Color，VertexColor 等
    
-   3. 将两个端点放入几何体中
+   *3.将两个端点放入几何体中*
    #+BEGIN_SRC js
      geometry.vertices.push(p1)
      geometry.vertices.push(p2)
    #+END_SRC
 
-   4. 设置两点的颜色
+   *4.设置两点的颜色*
    #+BEGIN_SRC js
      geometry.colors.push(new THREE.Color(rgb), new THREE.Color(rgb))
    #+END_SRC
 
-   5. 定义一条线段
+   *5.定义一条线段*
    #+BEGIN_SRC js
      const line = new THREE.Line(geometry, material, THREE.LineSegments)
    #+END_SRC
 
-   6. 添加到场景中
+   *6.添加到场景中*
    #+BEGIN_SRC js
      scene.add(line)
+   #+END_SRC
+   
+* 第三章 渲染
+   #+BEGIN_SRC js
+     renderer.render(scene, camera)
+   #+END_SRC
+
+   每次改变场景中物体的各种属性，都必须重新调用该函数。不然新的场景是不会被自动重新渲染的。
+
+   :循环渲染: requestAnimationFrame 函数，参数为下一动画帧调用的函数。
+
+** 动态场景
+   1. 通过改变物体的位置属性
+   2. 通过改变相机的位置属性
+
+** 性能评估
+   :帧数: 图形处理器每秒能刷新几次，通常用 fps(Frame Pre Second) 表示。
+
+   *性能监视器 [[https://github.com/mrdoob/stats.js/][stats.js]]*
+
+   #+BEGIN_SRC js
+     const stats = new Stats()
+     stats.setMode(0)                // 0: fps, 1: ms
+   #+END_SRC
+
+** 动画引擎
+   [[https://github.com/tweenjs/tween.js][Tween.js]]
+
+   创建动画：
+   #+BEGIN_SRC js
+     new TWEEN.Tween(obj.attr).to(obj, time).repeat(times).start()
+   #+END_SRC
+
+   使用：
+   #+BEGIN_SRC js
+     TWEEN.update()
    #+END_SRC
