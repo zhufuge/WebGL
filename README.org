@@ -1,3 +1,4 @@
+#+TITLE: WebGL & Three.js
 
 * 第一章 基础概念
 
@@ -34,3 +35,58 @@
 当物件变多时，整个系统会变得很乱，因此需要将其结构化，形成一个简单的框架。
 这样更利于开发和维护。
 
+* 第二章 点线面
+** 点
+   定义一个点很简单。
+
+   #+BEGIN_SRC js
+     new THREE.Vector3(x, y, z)
+     // 或 使用 set 方法
+     const point = new THREE.Vector3()
+     point.set(x, y, z)
+   #+END_SRC
+
+   坐标系为右手坐标系，x 正向右，y 正向上，z 正向前。
+
+   缺省值为 0。
+
+** 线段
+   画一条线段有点复杂。
+
+   1. 首先要声明一个几何体 geometry
+   #+BEGIN_SRC js
+     const geometry = new THREE.Geometry()
+   #+END_SRC
+
+   #+TODO 为什么要先定义个几何体？
+   #Threejs 没有提供单独画点的函数，它必须被放到一个几何体里面
+
+   几何体里有一个 vertices 变量，是个数组，可以用来存放无数个点。
+
+   2. 定义线条的材质
+   #+BEGIN_SRC js
+     const material = new THREE.LineBasicMaterial(Object)
+   #+END_SRC
+
+   Object 为一个定义材质外观的普通对象， 如 Color，VertexColor 等
+   
+   3. 将两个端点放入几何体中
+   #+BEGIN_SRC js
+     geometry.vertices.push(p1)
+     geometry.vertices.push(p2)
+   #+END_SRC
+
+   4. 设置两点的颜色
+   #+BEGIN_SRC js
+     geometry.colors.push(new THREE.Color(rgb), new THREE.Color(rgb))
+   #+END_SRC
+
+   5. 定义一条线段
+   #+BEGIN_SRC js
+     const line = new THREE.Line(geometry, material, THREE.LineSegments)
+   #+END_SRC
+
+   6. 添加到场景中
+   #+BEGIN_SRC js
+     scene.add(line)
+   #+END_SRC

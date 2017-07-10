@@ -9,16 +9,16 @@ let light
 
 function initThree() {
   renderer = new THREE.WebGLRenderer({
-    antialias: true
+    antialias: true             // ?
   })
 
   renderer.setSize(width, height)
   canvas.appendChild(renderer.domElement)
-  renderer.setClearColor(0xffffff, 1.0)
+  renderer.setClearColor(0xffffff, 1.0) // ?
 }
 
 function initCamera() {
-  camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000)
+  camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000) // ?
   camera.position.x = 0
   camera.position.y = 1000
   camera.position.z = 0
@@ -42,26 +42,41 @@ function initLight() {
   scene.add(light)
 }
 
+// function initObject() {
+//   const geometry = new THREE.Geometry()
+//   const material = new THREE.LineBasicMaterial({ vertexColors: true })
+
+//   geometry.vertices.push(
+//     new THREE.Vector3(-100, 0, 100),
+//     new THREE.Vector3(100, 0, -100))
+//   geometry.colors.push(
+//     new THREE.Color(0x00FF00),
+//     new THREE.Color(0xFF0000))
+
+//   const line = new THREE.Line(geometry, material, THREE.LineSegments)
+//   scene.add(line)
+// }
+
 function initObject() {
   const geometry = new THREE.Geometry()
-  const material = new THREE.LineBasicMaterial({ vertexColors: true })
-  const colors = [
-    new THREE.Color(0x444444),
-    new THREE.Color(0xFF0000)
-  ]
+  geometry.vertices.push(
+    new THREE.Vector3( - 500, 0, 0 ),
+    new THREE.Vector3( 500, 0, 0 ))
 
-  const points = [
-    new THREE.Vector3(-100, 0, 100),
-    new THREE.Vector3(100, 0, -100)
-  ]
+  const material = new THREE.LineBasicMaterial({ color: 0x000000, opacity: 0.2 })
 
-  geometry.vertices.push(points[0])
-  geometry.vertices.push(points[1])
-  geometry.colors.push(colors[0], colors[1])
+  for (let i = 0; i <= 20; i++) {
+    const line1 = new THREE.Line(geometry, material)
+    line1.position.z = (i * 50) - 500
+    scene.add(line1)
 
-  const line = new THREE.Line(geometry, material, THREE.LinePieces)
-  scene.add(line)
+    const line2 = new THREE.Line(geometry, material)
+    line2.position.x = (i * 50) - 500;
+    line2.rotation.y = 90 * Math.PI / 180;
+    scene.add(line2);
+  }
 }
+
 
 function threeStart() {
   initThree()
@@ -74,3 +89,6 @@ function threeStart() {
 }
 
 document.onload = threeStart()
+
+
+
