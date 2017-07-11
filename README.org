@@ -126,3 +126,39 @@
    #+BEGIN_SRC js
      TWEEN.update()
    #+END_SRC
+* 第四章 观察（相机）
+
+** 相机
+  THREE.Camera 是相机的抽象基类，其子类有两种相机，分别是：
+  - 正（交）投影相机 THREE.OrthographicCamera
+  - 透视投影相机 THREE.PerspectiveCamera
+
+
+  *两者的区别*
+
+  - 正交投影： 远近高低比例都相同
+  - 透视投影： 有一个基本点，近大远小 
+  
+*** 正交投影相机
+    #+BEGIN_SRC js
+      const camera = new THREE.OrthographicCamera(
+        left, right, top, bottom, near, far
+      )
+    #+END_SRC
+
+    这六个参数定义了一个长方体的六个面。这个长方形被称为 *视景体* 。只有视景体内
+    的东西会被相机捕获
+
+*** 透视投影相机
+
+    #+BEGIN_SRC js
+      const camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
+    #+END_SRC
+
+    - for： 视角
+    - aspect： 纵横比
+    - near： 近平面
+    - far： 远平面
+
+
+    这四个参数能定义一个六面体。
