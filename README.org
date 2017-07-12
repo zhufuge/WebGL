@@ -162,3 +162,30 @@
 
 
     这四个参数能定义一个六面体。
+* 第五章 光源
+  光源基类：
+  #+BEGIN_SRC js
+    const light = new THREE.Light(color)
+  #+END_SRC
+
+  由基类派生出来的其他种类光源
+  - AmbientLight 环境光
+  - AreaLight 区域光
+  - DirectionalLight 方向光
+  - SpotLight 聚光灯
+  - PointLight 点光源
+
+** 环境光
+   环境光是经过多次反射而来的光，无法确定最初的方向。环境光源放出来的光线可以认
+   为是来自任何方向。在场景中指定环境光时，所有的物体无论法向量如何，都将表现为
+   同样的明暗程度。
+
+** 点光源
+
+   #+BEGIN_SRC js
+     const pointLight = new THREE.PointLight(color, intensity, distance)
+   #+END_SRC
+   - intensity：光强度，默认为 1.0 （100% 强度的光）
+   - distance：光的距离，从光源所在的位置，经过 distance 这段距离后，光的强度将
+     从 intensity 衰减为 0，默认为 0.0（光源强度不衰减）
+
