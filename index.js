@@ -15,20 +15,20 @@ function initThree() {
 
   renderer.setSize(width, height)
   canvas.appendChild(renderer.domElement)
-  renderer.setClearColor(0xffffff, 1.0) // ?
+  renderer.setClearColor(0xffffff, 1.0)
 
   stats = new Stats()
   document.body.appendChild(stats.domElement)
 }
 
 function initCamera() {
-  camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000) // ?
-  camera.position.x = 0
-  camera.position.y = 1000
-  camera.position.z = 0
+  camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000)
+  camera.position.x = 5
+  camera.position.y = 5
+  camera.position.z = 5
   camera.up.x = 0
-  camera.up.y = 0
-  camera.up.z = 1
+  camera.up.y = 1
+  camera.up.z = 0
   camera.lookAt({
     x : 0,
     y : 0,
@@ -41,28 +41,32 @@ function initScene() {
 }
 
 function initLight() {
-  light = new THREE.DirectionalLight(0xff0000, 1.0, 0)
-  light.position.set(100, 100, 200)
+  //light = new THREE.DirectionalLight(0xffffff, 1.0)
+  light = new THREE.AmbientLight(0xffffff)
+  //light = new THREE.PointLight(0xffffff, 1, 10000)
+  light.position.set(0, 1000, 0)
   scene.add(light)
 }
 
-
-function initObject() {
-  const geometry = new THREE.Geometry()
-  const material = new THREE.LineBasicMaterial({ vertexColors: true })
-
-  geometry.vertices.push(
-    new THREE.Vector3(-100, 0, 100),
-    new THREE.Vector3(100, 0, -100))
-  geometry.colors.push(
-    new THREE.Color(0x00FF00),
-    new THREE.Color(0xFF0000))
-
-  line = new THREE.Line(geometry, material, THREE.LineSegments)
-  scene.add(line)
-
-  new TWEEN.Tween(line.rotation).to({y: Math.PI}, 1000).repeat(Infinity).start()
+function initGrid() {
+  const gridHelper = new THREE.GridHelper(5, 10)
+  scene.add(gridHelper)
 }
+
+let mesh
+function initObject() {
+  //const geometry = new THREE.CubeGeometry(1, 1, 1, 8, 8)
+  const geometry = new THREE.BoxGeometry(1, 1, 1)
+  const material = new THREE.MeshBasicMaterial({
+    map: THREE.ImageUtils.loadTexture("./assets/redstone_ore.png")
+  })
+  mesh = new THREE.Mesh(geometry, material)
+  mesh.position = new THREE.Vector3(0, 0, 0)
+  scene.add(mesh)
+  new TWEEN.Tween(mesh.rotation)
+    .to({x: Math.PI * 2, z: Math.PI * 2}, 5000).repeat(Infinity).start()
+}
+
 
 function animation() {
   renderer.render(scene, camera)
@@ -77,8 +81,10 @@ function threeStart() {
   initCamera()
   initScene()
   initLight()
+  initGrid()
   initObject()
   animation()
 }
 
 document.onload = threeStart()
+
