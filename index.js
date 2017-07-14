@@ -1,6 +1,5 @@
-const canvas = document.getElementById('canvas-frame')
-const width = canvas.clientWidth
-const height = canvas.clientHeight
+const width = window.innerWidth
+const height = window.innerHeight
 
 let renderer
 let stats
@@ -9,12 +8,9 @@ let scene
 let light
 
 function initThree() {
-  renderer = new THREE.WebGLRenderer({
-    antialias: true             // ?
-  })
-
+  renderer = new THREE.WebGLRenderer()
   renderer.setSize(width, height)
-  canvas.appendChild(renderer.domElement)
+  document.body.appendChild(renderer.domElement)
   renderer.setClearColor(0xffffff, 1.0)
 
   stats = new Stats()
@@ -22,18 +18,10 @@ function initThree() {
 }
 
 function initCamera() {
-  camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000)
-  camera.position.x = 5
-  camera.position.y = 5
-  camera.position.z = 5
-  camera.up.x = 0
-  camera.up.y = 1
-  camera.up.z = 0
-  camera.lookAt({
-    x : 0,
-    y : 0,
-    z : 0
-  })
+  camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100)
+  camera.position.set(5, 5, 3)
+  camera.up.set(0, 1, 0)
+  camera.lookAt(new THREE.Vector3(0, 0, 0))
 }
 
 function initScene() {
@@ -41,10 +29,7 @@ function initScene() {
 }
 
 function initLight() {
-  //light = new THREE.DirectionalLight(0xffffff, 1.0)
   light = new THREE.AmbientLight(0xffffff)
-  //light = new THREE.PointLight(0xffffff, 1, 10000)
-  light.position.set(0, 1000, 0)
   scene.add(light)
 }
 
@@ -55,16 +40,28 @@ function initGrid() {
 
 let mesh
 function initObject() {
-  //const geometry = new THREE.CubeGeometry(1, 1, 1, 8, 8)
   const geometry = new THREE.BoxGeometry(1, 1, 1)
   const material = new THREE.MeshBasicMaterial({
     map: THREE.ImageUtils.loadTexture("./assets/redstone_ore.png")
   })
   mesh = new THREE.Mesh(geometry, material)
-  mesh.position = new THREE.Vector3(0, 0, 0)
   scene.add(mesh)
+
+  const Cyc = Math.PI * 2
   new TWEEN.Tween(mesh.rotation)
-    .to({x: Math.PI * 2, z: Math.PI * 2}, 5000).repeat(Infinity).start()
+    .to({x: Cyc, y: Cyc}, 10000).repeat(Infinity).start()
+
+  const lineGeometry = new THREE.Geometry()
+  lineGeometry.vertices.push(
+    new THREE.Vector3(5, 0, 0),
+    new THREE.Vector3(-5, 0, 0)
+  )
+  const line = new THREE.Line(
+    lineGeometry,
+    new THREE.LineBasicMaterial({ color: 0x0000ff })
+  )
+
+  scene.add(line)
 }
 
 
@@ -87,4 +84,3 @@ function threeStart() {
 }
 
 document.onload = threeStart()
-
