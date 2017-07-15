@@ -51,17 +51,25 @@ function initObject() {
   new TWEEN.Tween(mesh.rotation)
     .to({x: Cyc, y: Cyc}, 10000).repeat(Infinity).start()
 
-  const lineGeometry = new THREE.Geometry()
-  lineGeometry.vertices.push(
-    new THREE.Vector3(5, 0, 0),
-    new THREE.Vector3(-5, 0, 0)
-  )
-  const line = new THREE.Line(
-    lineGeometry,
-    new THREE.LineBasicMaterial({ color: 0x0000ff })
-  )
+  scene.add(new THREE.Mesh(
+    new THREE.CubeGeometry(5, 5, 5),
+    new THREE.MeshBasicMaterial({
+      color: 0x00ff00,
+      wireframe: true
+    })
+  ))
 
-  scene.add(line)
+  var loader = new THREE.FontLoader()
+  loader.load('./lib/Bavro_Regular.json', function(font) {
+    var mesh = new THREE.Mesh(new THREE.TextGeometry('Hello', {
+      font: font,
+      size: 1,
+      height: 0.1
+    }), new THREE.MeshBasicMaterial({
+      color: 0x00ff00
+    }))
+    scene.add(mesh)
+  })
 }
 
 
