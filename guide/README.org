@@ -217,7 +217,29 @@
   改变物体的颜色、纹理贴图、光照模式等。
   #+END_QUOTE
 
+** 基本材质
+   使用基本材质的物体，渲染后的颜色始终为该材质的颜色，不会因光照产生明暗、阴影效果。
+   构造函数：
+   #+BEGIN_SRC js
+     THREE.MeshBasicMaterial(opt)
+   #+END_SRC
+   opt 的属性很多，常用的几个为：
+    - color
+    - visible：是否可见，默认为true
+    - side：渲染面片正面或是反面，默认为正面THREE.FrontSide，可设置为反面
+      THREE.BackSide，或双面THREE.DoubleSide
+    - wireframe：是否渲染线而非面，默认为false
+    - map：使用纹理贴图
+** Lambert 材质
+   Lambert光照模型的主要特点是只考虑漫反射而不考虑镜面反射的效果。可以认为是粗糙
+   度小且均匀的材质。
 
+   其光照模型的公式为
+   #+BEGIN_SRC latex
+     Idiffuse = Kd * Id * cos(theta)
+   #+END_SRC
+   其中， =Idiffuse= 是漫反射光强， =Kd= 是物体表面的漫反射属性， =Id= 是光强，
+   =theta= 是光的入射角弧度。
 * 第五章 渲染
    #+BEGIN_SRC js
      renderer.render(scene, camera)
