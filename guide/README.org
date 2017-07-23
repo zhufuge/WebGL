@@ -1,4 +1,4 @@
-#+TITLE: WebGL 和 Three.js
+#+TITLE: Three.js Note
 #+AUTHOR: zhufuge
 #+DATE: <2017-07-15 周六 17:20>
 
@@ -226,12 +226,12 @@
    opt 的属性很多，常用的几个为：
     - color
     - visible：是否可见，默认为true
-    - side：渲染面片正面或是反面，默认为正面THREE.FrontSide，可设置为反面
-      THREE.BackSide，或双面THREE.DoubleSide
-    - wireframe：是否渲染线而非面，默认为false
+    - side：渲染面片正面或是反面，默认为正面 THREE.FrontSide，可设置为反面 
+      THREE.BackSide，或双面 THREE.DoubleSide
+    - wireframe：是否渲染线而非面，默认为 false
     - map：使用纹理贴图
 ** Lambert 材质
-   Lambert光照模型的主要特点是只考虑漫反射而不考虑镜面反射的效果。可以认为是粗糙
+   Lambert 光照模型的主要特点是只考虑漫反射而不考虑镜面反射的效果。可以认为是粗糙
    度小且均匀的材质。
 
    其光照模型的公式为
@@ -240,7 +240,86 @@
    #+END_SRC
    其中， =Idiffuse= 是漫反射光强， =Kd= 是物体表面的漫反射属性， =Id= 是光强，
    =theta= 是光的入射角弧度。
-* 第五章 渲染
+
+   构造函数是：
+   #+BEGIN_SRC js
+     THREE.MeshlambertMaterial(opt)
+   #+END_SRC
+   可以用 =ambient= 和 =emissive= 控制材质的颜色
+
+   - =ambient= 表示对环境光的反射能力，只有当设置了 =AmbientLight= 后，该值才是
+     有效的，材质对环境光的反射能力与环境光强相乘后得到材质实际表现的颜色。
+   - =emissive= 是材质的自发光颜色，可以用来表现光源的颜色。
+** Phong 材质
+   Phong 材质考虑了镜面反射的效果，对于金属和镜面的表现尤为适合。
+
+   由于漫反射部分与 Lambert 模型是一致的，若未指定镜面反射系数，效果会和 Lambert
+   一样。
+
+   - =specular= 指定镜面反射系数，值为颜色
+   - =shininess= 值越大，高光的光斑越小，默认为 30
+** 法向材质
+   法向材质可以将材质颜色设置为其法向量的方向，有时候对于调试很有帮助。
+   
+   构造函数是：
+   #+BEGIN_SRC js
+     THREE.MeshNormalMaterial()
+   #+END_SRC
+   
+   材质的颜色与相机与物体的角度相关。
+** 材质的纹理贴图
+   1. 导入纹理
+      #+BEGIN_SRC js
+        const texture = THREE.ImageUtils.loadTexture(imageURL)
+      #+END_SRC
+   2. 将材质的 =map= 属性设置为 =texture=
+
+
+   注意：纹理导入前，可能画面已经渲染完成，如果没有重新渲染，会不出现效果。
+
+   纹理类由 THREE.Texture 表示
+   #+BEGIN_SRC js
+    const texture = new THREE.Texture( img, mapping, wrapS, wrapT, magFilter,
+      minFilter, format, type, anisotropy )
+   #+END_SRC
+
+   - img：THREE.ImageUtils.loadTexture(url)
+   - mapping：THREE.UVMapping() 表示纹理坐标
+   - wrapS/wrapT：表示 x/y 轴的纹理的回环方式
+   - magFilter/minFilter：表示过滤的方式
+   - format：表示加载的图片格式，THREE.RGBAFormat 或 THREE.RGBFormat
+   - type：表示存储纹理的内存的每个字节的格式，默认为无符号类型（THREE.UnsignedByteType)
+   - anisotropy：各向异性过滤
+
+* 第五章 网格
+  最常用的一种物体就是网格（Mesh），网格是由顶点、边、面等组成的物体；其他物体包括
+  线段（Line）、骨骼（Bone）、粒子系统（ParticleSystem）等。创建物体需要指定几何形
+  状和材质，其中，几何形状决定了物体的顶点位置等信息，材质决定了物体的颜色、纹理等
+  信息。
+
+  *创建*
+  #+BEGIN_SRC js
+    new THREE.Mesh(geometry, material)
+  #+END_SRC
+   
+   
+  *位置、缩放、旋转*
+
+  位置、缩放、旋转是物体三个常用属性。由于THREE.Mesh基础自THREE.Object3D，因此包
+  含scale、rotation、position三个属性。
+  
+
+  #+BEGIN_SRC js
+    // 单独设置
+    mesh.position.z = 1
+
+    // 同时设置多个
+    mesh.position.set(1.5, -0.5, 0)
+
+    // 用点来设置
+    mesh.position = new THREE.Vector3(1.5, -0.5, 0)
+  #+END_SRC
+* 第六章 渲染
    #+BEGIN_SRC js
      renderer.render(scene, camera)
    #+END_SRC
@@ -275,7 +354,7 @@
    #+BEGIN_SRC js
      TWEEN.update()
    #+END_SRC
-* 第六章 光源
+* 第七章 光源
   光源基类：
   #+BEGIN_SRC js
     const light = new THREE.Light(color)
@@ -319,28 +398,7 @@
    
    方向由位置和原点决定。
 
-* 第七章 纹理
-  纹理类由 THREE.Texture 表示
-  #+BEGIN_SRC js
-    const texture = new THREE.Texture( img, mapping, wrapS, wrapT, magFilter,
-      minFilter, format, type, anisotropy )
- #+END_SRC
-
-  - img：THREE.ImageUtils.loadTexture(url)
-  - mapping：THREE.UVMapping() 表示纹理坐标
-  - wrapS/wrapT：表示 x/y 轴的纹理的回环方式
-  - magFilter/minFilter：表示过滤的方式
-  - format：表示加载的图片格式，THREE.RGBAFormat 或 THREE.RGBFormat
-  - type：表示存储纹理的内存的每个字节的格式，默认为无符号类型（THREE.UnsignedByteType)
-  - anisotropy：各向异性过滤
-
-
-  给立方体添加纹理，只需要将纹理放入材质设置中，简单的设置如下所示：
-  #+BEGIN_SRC js
-    const material = new THREE.MeshBasicMaterial({ map:
-    THREE.ImageUtils.loadTexture("./assets/redstone_ore.png") })
-  #+END_SRC
-* 第八章 网格
+* 第八章 辅助
   创建一个参考网格：
   #+BEGIN_SRC js
     const gridHelper = new THREE.GridHelper(size, split)
